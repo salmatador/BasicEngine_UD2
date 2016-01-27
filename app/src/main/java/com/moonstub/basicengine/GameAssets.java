@@ -16,6 +16,7 @@ public class GameAssets {
 
     public static GameImage BlueGem;
     public static GameImage GreenGem;
+    public static GameImage BombGem;
     //Splash Screen Assets
     public static GameImage SplashImage;
     //MainMenu Assets

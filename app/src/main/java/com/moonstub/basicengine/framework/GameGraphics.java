@@ -5,13 +5,13 @@ import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
-
 
 public class GameGraphics {
 
@@ -65,9 +65,22 @@ public class GameGraphics {
     }
 
     //TODO fix this right now it only clears to black
-    public void clearScreen(int color) {
+    public void clearScreen(Colors color) {
+        switch (color){
 
-        mCanvas.drawRGB(0, 0, 0);
+            case BLACK:
+                mCanvas.drawRGB(0, 0, 0);
+                break;
+            case WHITE:
+                mCanvas.drawRGB(255, 255, 255);
+                break;
+            case GRAY:
+                mCanvas.drawRGB(100, 100, 100);
+                break;
+            default:
+                mCanvas.drawRGB(0, 0, 0);
+        }
+
 
     }
 
