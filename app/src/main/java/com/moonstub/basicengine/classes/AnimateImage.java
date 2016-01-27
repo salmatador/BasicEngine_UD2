@@ -55,4 +55,8 @@ public class AnimateImage {
 
         return true;
     }
+
+    public int getFrameCount() {
+        return mImages.length;
+    }
 }

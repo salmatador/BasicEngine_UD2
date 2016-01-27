@@ -12,4 +12,7 @@ public class GameSettings {
     public static final int PORT_SCREEN_WIDTH = 800;
     public static final int PORT_SCREEN_HEIGHT = 1200;
     public static final float SPEED = 12;
+
+    public static final int OFFSET_X = 50;
+    public static final int OFFSET_Y = 200;
 }
