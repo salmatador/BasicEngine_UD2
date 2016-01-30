@@ -5,8 +5,8 @@ package com.moonstub.basicengine.framework;
  */
 public class GameSettings {
 
-    public static final int LAND_SCREEN_WIDTH = 1200;
-    public static final int LAND_SCREEN_HEIGHT = 800;
+    public static final int LAND_SCREEN_WIDTH = 600;
+    public static final int LAND_SCREEN_HEIGHT = 400;
     public static final int GRID_SIZE = 50;
 
     public static final int PORT_SCREEN_WIDTH = 800;
@@ -14,5 +14,5 @@ public class GameSettings {
     public static final float SPEED = 12;
 
     public static final int OFFSET_X = 50;
-    public static final int OFFSET_Y = 200;
+    public static final int OFFSET_Y = 50;
 }

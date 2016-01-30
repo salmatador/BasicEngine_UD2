@@ -17,6 +17,8 @@ public class GameGrid {
     int currentFrame = 0;
     int maxFrame;
     int gemIndex = 0;
+    float timeElapsed = 0.0f;
+    float animationDelay = 3.0f;
     boolean isAlive;
     int x,y;
     Random randGem = new Random();;
@@ -27,18 +29,23 @@ public class GameGrid {
         this.y = y;
         this.maxFrame = maxFrame;
         isAlive = false;
-        gemIndex = randGem.nextInt(8);
-
+        setRandomGemIndex();
+        //gemIndex = 0;
     }
 
     public void setMaxFrame(int maxFrame){
         this.maxFrame = maxFrame;
     }
-    public void updateFrame(){
-        currentFrame++;
-        if(currentFrame > maxFrame - 1){
-            currentFrame = 0;
-        }
+
+    public void updateFrame(float delta){
+        //timeElapsed = timeElapsed + delta;
+        //if(timeElapsed >= animationDelay) {
+            currentFrame++;
+            if (currentFrame > maxFrame) {
+                currentFrame = 0;
+            }
+          //  timeElapsed = 0.0f;
+        //}
     }
 
     public void draw(GameGraphics graphics, AnimateImage[] gemImage){
@@ -55,5 +62,17 @@ public class GameGrid {
 
     public int getGemIndex() {
         return this.gemIndex;
+    }
+
+    public void setGemIndex(int gemIndex) {
+        this.gemIndex = gemIndex;
+    }
+
+    public boolean isEmpty() {
+        return !(gemIndex > 0);
+    }
+
+    public void setRandomGemIndex() {
+        gemIndex = randGem.nextInt(8);
     }
 }
