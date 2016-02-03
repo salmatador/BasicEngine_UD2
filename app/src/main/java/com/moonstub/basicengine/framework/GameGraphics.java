@@ -97,6 +97,12 @@ public class GameGraphics {
 
     }
 
+    public void drawRect(Rect rect, int color){
+        mPaint.setColor(color);
+        mPaint.setStyle(Paint.Style.FILL);
+        mCanvas.drawRect(rect, mPaint);
+    }
+
     public void drawImage(GameImage image, int x, int y,
                           int srcX, int srcY, int srcWidth, int srcHeight) {
 

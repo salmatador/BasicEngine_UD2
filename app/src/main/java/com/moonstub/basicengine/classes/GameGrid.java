@@ -1,6 +1,7 @@
 package com.moonstub.basicengine.classes;
 
 import android.graphics.Bitmap;
+import android.graphics.Rect;
 
 import com.moonstub.basicengine.framework.GameGraphics;
 import com.moonstub.basicengine.framework.GameImage;
@@ -29,7 +30,8 @@ public class GameGrid {
         this.y = y;
         this.maxFrame = maxFrame;
         isAlive = false;
-        setRandomGemIndex();
+        setInitGemIndex();
+        //setRandomGemIndex();
         //gemIndex = 0;
     }
 
@@ -72,7 +74,16 @@ public class GameGrid {
         return !(gemIndex > 0);
     }
 
+    public void setInitGemIndex(){
+        gemIndex = 3;
+    }
     public void setRandomGemIndex() {
         gemIndex = randGem.nextInt(8);
+    }
+
+    public Rect bounds(){
+        return new Rect(300,50,350,100);
+
+
     }
 }
