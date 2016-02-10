@@ -48,8 +48,8 @@ public abstract class GameActivity extends AppCompatActivity {
         //Todo Lock Orientation to Landscape Mode if game Requires
 
         //Set Screen Dimensions
-        int width = GameSettings.LAND_SCREEN_WIDTH;
-        int height = GameSettings.LAND_SCREEN_HEIGHT;
+        int width = GameSettings.PORT_SCREEN_WIDTH;
+        int height = GameSettings.PORT_SCREEN_HEIGHT;
 
         mGameBuffer = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
 

@@ -32,6 +32,29 @@ public class AnimateImage {
             return mImages[index];
     }
 
+    public boolean LoadImageArrayVertical(){
+        boolean isDone = false;
+        int x = 0;
+        int y = 0;
+        int count = 0;
+        mImages = new GameImage[mSpriteCount];
+        while(!isDone){
+            mImages[count] = mGameActivity.getGameGraphics()
+                    .newSpriteImage(mSpriteImage,x,y,mFrameSizeX,mFrameSizeY);
+            count++;
+            y = y + mFrameSizeY;
+            if(y > mSpriteImage.getHeight() - mFrameSizeY){
+                y = 0;
+                x = x + mFrameSizeX;
+            }
+            if(count == mSpriteCount){
+                isDone = true;
+            }
+
+        }
+
+        return true;
+    }
     public boolean LoadImageArray(){
         boolean isDone = false;
         int x = 0;

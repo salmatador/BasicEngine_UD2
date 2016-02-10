@@ -82,7 +82,9 @@ public class GameGrid {
     }
 
     public Rect bounds(){
-        return new Rect(300,50,350,100);
+        int rx = getX()*size+ GameSettings.OFFSET_X;
+        int ry = getY()*size + GameSettings.OFFSET_Y;
+        return new Rect(rx,ry,rx+size,ry+size);
 
 
     }

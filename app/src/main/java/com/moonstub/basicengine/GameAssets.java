@@ -14,6 +14,22 @@ public class GameAssets {
         //Add more options for more screens Loading Screen Loads Assets
     }
 
+    public static GameImage BlueGem3H;
+    public static GameImage BlueGem3V;
+    public static GameImage GreenGem3H;
+    public static GameImage GreenGem3V;
+    public static GameImage YellowGem3H;
+    public static GameImage YellowGem3V;
+    public static GameImage RedGem3H;
+    public static GameImage RedGem3V;
+    public static GameImage WhiteGem3H;
+    public static GameImage WhiteGem3V;
+    public static GameImage OrangeGem3H;
+    public static GameImage OrangeGem3V;
+    public static GameImage PurpleGem3H;
+    public static GameImage PurpleGem3V;
+
+
     public static GameImage BlueGem;
     public static GameImage GreenGem;
     public static GameImage YellowGem;

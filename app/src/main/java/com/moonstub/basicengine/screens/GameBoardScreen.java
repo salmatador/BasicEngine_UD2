@@ -23,10 +23,12 @@ public class GameBoardScreen extends GameScreen {
     AnimateImage[] gems;
     GameGrid[] gameBoard;
     boolean isFull = true;
-    float deltaSlow = 100.0f;
+    float deltaSlow = 35.0f;
     float actualDeltaSlow = 0.0f;
 
     int eventX = 0,eventY = 0;
+    int testX = 0,testY = 0;
+    GameGrid[] gemGrid;
 
     public GameBoardScreen(GameActivity game) {
         super(game);
@@ -36,6 +38,9 @@ public class GameBoardScreen extends GameScreen {
     public void init() {
         gems = new AnimateImage[8];
         gameBoard = new GameGrid[64];
+        gemGrid = new GameGrid[2];
+        gemGrid[0] = null;
+        gemGrid[1] = null;
 
         gems[1] = new AnimateImage(getGameActivity(), GameAssets.BlueGem,50,50,20);
         gems[2] = new AnimateImage(getGameActivity(), GameAssets.GreenGem,50,50,20);
@@ -68,12 +73,64 @@ public class GameBoardScreen extends GameScreen {
         ArrayList<TouchEvent.TouchEvents> events = (ArrayList<TouchEvent.TouchEvents>) getGameActivity()
                 .getGameInput().getTouchEvents();
 
-        if(events.size() > 0){
-            eventX = events.get(0).x;
-            eventY = events.get(0).y;
+        if(events.size() > 0) {
+            testX = events.get(0).x; // Replace 50 with variable
+            testY = events.get(0).y; // Ditto
+
+            eventX = testX / 50;
+            eventY = testY / 50;
+            //Check which index is touched if any
+
+            int index = eventY * 8 + eventX;
+
+            if (index < 64 && index >= 0) {
+
+                if (gemGrid[0] == null) {
+                    gemGrid[0] = gameBoard[index];
+                } else {
+                    gemGrid[1] = gameBoard[index];
+                    swapGems();
+                }
+            }
         }
 
-        if(actualDeltaSlow > deltaSlow) {
+//        if(events.size() > 0){
+//            eventX = events.get(0).x;
+//            eventY = events.get(0).y;
+//
+//            if(gemGrid[0] == null){
+//                for(int i = 0; i < gameBoard.length;i++) {
+//                    if(gameBoard[i].bounds().contains(eventX + 25, eventY)){
+//                        gemGrid[0] = gameBoard[i];
+//                        break;
+//                    }
+//                }
+//            } else if(gemGrid[1] == null){
+//                for(int i = 0; i < gameBoard.length;i++) {
+//                    if(gameBoard[i].bounds().contains(eventX + 25, eventY)){
+//                        gemGrid[1] = gameBoard[i];
+//                        break;
+//                    }
+//                }
+//                if(gemGrid[1] == null || gemGrid[1].equals(gemGrid[0])){
+//                    gemGrid[0] = null;
+//                }
+//            } else if(!gemGrid[0].equals(gemGrid[1])){
+//                int index = gemGrid[0].getGemIndex();
+//                gemGrid[0].setGemIndex(gemGrid[1].getGemIndex());
+//                gemGrid[1].setGemIndex(index);
+//                gemGrid[0] = null;
+//                gemGrid[1] = null;
+//            }
+
+            //for(GameGrid grid : gameBoard){
+            //    gemGrid[gemGrid[0] == null ? 0 : 1] = grid.bounds().contains(eventX-25,eventY) ? grid : null;
+            //}
+
+
+
+
+    if(actualDeltaSlow > deltaSlow) {
             isFull = checkZeroGrid();
             if (isFull) {
                 checkMatchGrid();
@@ -86,49 +143,73 @@ public class GameBoardScreen extends GameScreen {
         }
     }
 
+
+
+    private void swapGems() {
+        int tempGemIndex;
+        tempGemIndex = gemGrid[0].getGemIndex();
+        gemGrid[0].setGemIndex(gemGrid[1].getGemIndex());
+        gemGrid[1].setGemIndex(tempGemIndex);
+
+        gemGrid[0] = null;
+        gemGrid[1] = null;
+    }
     private void checkMatchGrid() {
+        ArrayList<GameGrid> matches = new ArrayList<>();
+        ArrayList<GameGrid> matchesY = new ArrayList<>();
+        int count = 0;
         for(int i = 0; i < 64; i++){
             GameGrid c = gameBoard[i];
-            ArrayList<GameGrid> matches = new ArrayList<>();
-            matches.add(c);
-            ArrayList<GameGrid> matchesY = new ArrayList<>();
-            matchesY.add(c);
-            //GameGrid[] matches = new GameGrid[8];
-            //GameGrid[] matchesY = new GameGrid[8];
-            //if(i % 8 < 6) {
-                int count = 0;
-                for(int x = 1; x < 8; x++) {
-                    if (i + x < 64 && c.getGemIndex() == gameBoard[i + x].getGemIndex() &&
-                            ((i + x) % 8) != 0) {
-                        //count++;
-                        matches.add(gameBoard[i+x]);
-                    } else {
-                        break;
+            count=0;
+            for(int x = 1; x < 8; x++) {
+                if (i + x < 64 && c.getGemIndex() == gameBoard[i + x].getGemIndex() &&
+                        ((i + x) % 8) != 0) {
+                    if(count == 0){
+                        matches.add(c);
                     }
-                }
-
-                for(int y = 1; y < 8; y++){
-                    if(i + (y * 8) < 64 && c.getGemIndex() == gameBoard[i + (y*8)].getGemIndex() &&
-                            ((i + y) % 8 != 0)){
-                        //matchesY[0] = c;
-                        matchesY.add(gameBoard[i + (y*8)]);
+                    count++;
+                    matches.add(gameBoard[i+x]);
+                } else {
+                    if(count==1){
+                        matches.remove(matches.size()-1);
+                        matches.remove(matches.size()-1);
                     }
+                    break;
                 }
-
-                if(matches.size() > 2){
-                    for(int j = 0; j < matches.size(); j++){
-                        matches.get(j).setGemIndex(0);
+            }
+            count=0;
+            for(int y = 1; y < 8; y++){
+                if(i + (y * 8) < 64 && c.getGemIndex() == gameBoard[i + (y*8)].getGemIndex() &&
+                        ((i + y) % 8 != 0)){
+                    if(count == 0){
+                        matchesY.add(c);
                     }
+                    count++;
+                    matchesY.add(gameBoard[i + (y*8)]);
                 }
-
-                if(matchesY.size() > 2){
-                    for(int j = 0; j < matchesY.size(); j++){
-                        matchesY.get(j).setGemIndex(0);
+                else{
+                    if(count==1){
+                        matchesY.remove(matchesY.size()-1);
+                        matchesY.remove(matchesY.size()-1);
                     }
+                    break;
                 }
-
             }
         }
+        if(matches.size() > 2){
+            for(int j = 0; j < matches.size(); j++){
+                matches.get(j).setGemIndex(0);
+            }
+            matches.clear();
+        }
+
+        if(matchesY.size() > 2){
+            for(int j = 0; j < matchesY.size(); j++){
+                matchesY.get(j).setGemIndex(0);
+            }
+            matchesY.clear();
+        }
+    }
     //}
 
     //This method checks the Game Grid in reverse for Empty Grids if it is Empty it pulls down from the
@@ -170,13 +251,19 @@ public class GameBoardScreen extends GameScreen {
             gameBoard[index].draw(getGameGraphics(), gems);
         }
 
+
+
         getPaint().setColor(Color.WHITE);
-        getPaint().setTextSize(30.f);
-        //getGameGraphics().drawString(gameBoard[14].bounds().contains(eventX, eventY) + "", 600, 400, getPaint());
-        //if())
-        getGameGraphics().drawRect(gameBoard[14].bounds(),
-                gameBoard[14].bounds().contains(eventX+25,eventY) ? Color.RED : Color.YELLOW);
+        getPaint().setTextSize(60.f);
+        if(gemGrid[0] != null){
+            getGameGraphics().drawRect(gemGrid[0].bounds(), Color.RED);
+        }
+        if(gemGrid[1] != null) {
+            getGameGraphics().drawRect(gemGrid[1].bounds(), Color.YELLOW);
+        }
         getGameGraphics().drawString(eventX + " , " + eventY + " : ", 600,200,getPaint());
+        getGameGraphics().drawString(testX + " , " + testY + " : ", 600,400,getPaint());
+
     }
 
     @Override

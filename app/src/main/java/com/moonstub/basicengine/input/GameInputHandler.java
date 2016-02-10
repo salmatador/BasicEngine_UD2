@@ -76,8 +76,8 @@ public class GameInputHandler implements InputHandler {
                     throw new IllegalArgumentException();
             }
 
-            touchEvent.x = mTouchX = (int) (event.getX() * mScaleX);
-            touchEvent.y = mTouchY = (int) (event.getY() * mScaleY);
+            touchEvent.x = mTouchX = (int) (event.getRawX() * mScaleX);
+            touchEvent.y = mTouchY = (int) (event.getRawY() * mScaleY);
             mTouchEventsBuffer.add(touchEvent);
 
             return true;
