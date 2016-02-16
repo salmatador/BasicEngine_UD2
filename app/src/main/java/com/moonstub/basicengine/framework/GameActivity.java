@@ -51,7 +51,7 @@ public abstract class GameActivity extends AppCompatActivity {
         int width = GameSettings.PORT_SCREEN_WIDTH;
         int height = GameSettings.PORT_SCREEN_HEIGHT;
 
-        mGameBuffer = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+
 
         //TODO: Scale screen Dimensions to local screen Dimensions
         float scaleX;
@@ -61,12 +61,16 @@ public abstract class GameActivity extends AppCompatActivity {
             getWindowManager().getDefaultDisplay().getRealSize(size);
             scaleX = (float) width / size.x;
             scaleY = (float) height / size.y;
+            mGameBuffer = Bitmap.createBitmap(size.x/2, size.y/2, Bitmap.Config.RGB_565);
         } else {
             DisplayMetrics dmSize = new DisplayMetrics();
             getWindowManager().getDefaultDisplay().getMetrics(dmSize);
             scaleX = (float) width / dmSize.widthPixels;
             scaleY = (float) height / dmSize.heightPixels;
+            mGameBuffer = Bitmap.createBitmap(dmSize.widthPixels, dmSize.heightPixels, Bitmap.Config.RGB_565);
         }
+
+        //mGameBuffer = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
 
         //Set RenderView -> GameLoop
         mRenderView = new RenderView(this, mGameBuffer);
@@ -76,7 +80,7 @@ public abstract class GameActivity extends AppCompatActivity {
         mGameIO = new GameIO(this);
         //mGameAudio = new GameAudio(getAssets());
         //Gather simple inputs UP,DOWN,DRAG
-        mGameInput = new GameInput(this, mRenderView, scaleX, scaleY);
+        mGameInput = new GameInput(this, mRenderView, 1.0f,1.0f);//scaleX, scaleY);
         //Initialize First Screen
         mCurrentScreen = initializeScreen();
 

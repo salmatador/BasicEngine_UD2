@@ -2,6 +2,7 @@ package com.moonstub.basicengine.classes;
 
 import android.graphics.Bitmap;
 import android.graphics.Rect;
+import android.util.Log;
 
 import com.moonstub.basicengine.framework.GameGraphics;
 import com.moonstub.basicengine.framework.GameImage;
@@ -52,9 +53,13 @@ public class GameGrid {
 
     public void draw(GameGraphics graphics, AnimateImage[] gemImage){
         //if(gemIndex != 0){
-        graphics.drawImage(gemImage[gemIndex]
+        graphics.drawScaledImage(gemImage[gemIndex]
                 .getImage(currentFrame),(getX()*size)+ GameSettings.OFFSET_X,
-                (getY()*size) + GameSettings.OFFSET_Y);
+                (getY()*size) + GameSettings.OFFSET_Y,size,size);
+//        Log.d("Size of Drawing",
+//                gemImage[gemIndex].getImage(currentFrame).getWidth() +
+//                        " , " +
+//                        gemImage[gemIndex].getImage(currentFrame).getHeight());
         //}
     }
 

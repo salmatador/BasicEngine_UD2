@@ -99,6 +99,13 @@ public class GameGraphics {
 
     public void drawRect(Rect rect, int color){
         mPaint.setColor(color);
+        mPaint.setStyle(Paint.Style.STROKE);
+        mPaint.setStrokeWidth(5.0f);
+        mCanvas.drawRect(rect, mPaint);
+    }
+
+    public void drawFillRect(Rect rect, int color){
+        mPaint.setColor(color);
         mPaint.setStyle(Paint.Style.FILL);
         mCanvas.drawRect(rect, mPaint);
     }

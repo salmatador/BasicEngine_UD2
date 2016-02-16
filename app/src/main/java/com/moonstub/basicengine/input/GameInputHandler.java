@@ -50,8 +50,8 @@ public class GameInputHandler implements InputHandler {
         mTouchEventPool = new Pool<TouchEvents>(factory, 100);
         renderView.setOnTouchListener(this);
 
-        mScaleX = scaleX;
-        mScaleY = scaleY;
+        mScaleX = 1.0f;//scaleX;
+        mScaleY = 1.0f;//scaleY;
     }
 
     @Override
@@ -76,8 +76,8 @@ public class GameInputHandler implements InputHandler {
                     throw new IllegalArgumentException();
             }
 
-            touchEvent.x = mTouchX = (int) (event.getRawX() * mScaleX);
-            touchEvent.y = mTouchY = (int) (event.getRawY() * mScaleY);
+            touchEvent.x = mTouchX = (int) (event.getRawX());// * mScaleX);
+            touchEvent.y = mTouchY = (int) (event.getRawY());// * mScaleY);
             mTouchEventsBuffer.add(touchEvent);
 
             return true;
