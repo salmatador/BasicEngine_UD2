@@ -40,6 +40,10 @@ public class GameGrid {
         this.maxFrame = maxFrame;
     }
 
+    public int getIndex(){
+        //Assumes Grid is Always 8 wide
+        return y * 8 + x;
+    }
     public void updateFrame(float delta){
         //timeElapsed = timeElapsed + delta;
         //if(timeElapsed >= animationDelay) {

@@ -7,7 +7,9 @@ import com.moonstub.basicengine.framework.Colors;
 import com.moonstub.basicengine.framework.GameActivity;
 import com.moonstub.basicengine.framework.GameGraphics;
 import com.moonstub.basicengine.framework.GameScreen;
+import com.moonstub.basicengine.input.TouchEvent;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -197,7 +199,13 @@ public class LoadingScreen extends GameScreen {
 
     @Override
     public void update(float delta) {
+        ArrayList<TouchEvent.TouchEvents> events = (ArrayList<TouchEvent.TouchEvents>) getGameActivity()
+                .getGameInput().getTouchEvents();
 
+        if(events.size() > 0){
+            getGameActivity().setCurrentScreen(new MainMenuScreen(getGameActivity()));
+
+        }
     }
 
     @Override
@@ -294,7 +302,6 @@ public class LoadingScreen extends GameScreen {
 
     @Override
     public boolean onBackPressed() {
-        getGameActivity().setCurrentScreen(new GameBoardScreen(getGameActivity()));
-        return false;
+        return true;
     }
 }

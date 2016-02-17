@@ -22,10 +22,12 @@ public class GameBoardScreen extends GameScreen {
 
     AnimateImage[] gems;
     GameGrid[] gameBoard;
+    boolean mFirstRun = true;
     boolean isFull = true;
     float deltaSlow = 20.0f;
     float actualDeltaSlow = 0.0f;
 
+    int totalScore = 0;
     int eventX = 0,eventY = 0;
     int testX = 0,testY = 0;
     GameGrid[] gemGrid;
@@ -111,15 +113,29 @@ public class GameBoardScreen extends GameScreen {
     }
 
 
-
     private void swapGems() {
-        int tempGemIndex;
-        tempGemIndex = gemGrid[0].getGemIndex();
-        gemGrid[0].setGemIndex(gemGrid[1].getGemIndex());
-        gemGrid[1].setGemIndex(tempGemIndex);
+        if(isValidMove(gemGrid[0],gemGrid[1])) {
+            int tempGemIndex;
+            tempGemIndex = gemGrid[0].getGemIndex();
+            gemGrid[0].setGemIndex(gemGrid[1].getGemIndex());
+            gemGrid[1].setGemIndex(tempGemIndex);
+        }
 
+
+    }
+
+    private void resetGemGrid(){
         gemGrid[0] = null;
         gemGrid[1] = null;
+    }
+    private boolean isValidMove(GameGrid c, GameGrid n) {
+        int n1 = c.getIndex();
+        int n2 = n.getIndex();
+
+        if(n1 == n2 -1 || n1 == n2 + 1 ||n1 == n2 -8 || n1 == n2 + 8){
+            return true;
+        }
+        return false;
     }
 
     //Logic works even if it is a little hokey
@@ -128,6 +144,7 @@ public class GameBoardScreen extends GameScreen {
         ArrayList<GameGrid> matchesY = new ArrayList<>();
         ArrayList<GameGrid> masterMatch = new ArrayList<>();
         int count = 0;
+        int num = 0;
         for(int i = 0; i < 64; i++){
             GameGrid c = gameBoard[i];
             count=0;
@@ -148,6 +165,7 @@ public class GameBoardScreen extends GameScreen {
                 }
             }
             masterMatch.addAll(matches);
+            matches.clear();
             count=0;
             for(int y = 1; y < 8; y++){
                 if(i + (y*8) < 64 && c.getGemIndex() == gameBoard[i+y*8].getGemIndex() ){
@@ -167,16 +185,30 @@ public class GameBoardScreen extends GameScreen {
                 }
             }
             masterMatch.addAll(matchesY);
+            matchesY.clear();
         }
 
         if(masterMatch.size()> 2){
             for(int jj = 0; jj < masterMatch.size(); jj++){
                 masterMatch.get(jj).setGemIndex(0);
+
             }
-            masterMatch.clear();
+            resetGemGrid();
+
+        } else {
+            if(gemGrid[1] != null) {
+                swapGems();
+                resetGemGrid();
+            }
         }
 
+        if(!mFirstRun){
+            num = masterMatch.size() * 25;
+            totalScore += num;
+        }
 
+        masterMatch.clear();
+        mFirstRun = false;
     }
 
     //This method checks the Game Grid in reverse for Empty Grids if it is Empty it pulls down from the
@@ -202,19 +234,21 @@ public class GameBoardScreen extends GameScreen {
     @Override
     public void draw(float delta) {
         getGameGraphics().clearScreen(Colors.BLACK);
-        getGameGraphics().drawImage(GameAssets.GameBoard,0,0);
+        getGameGraphics().drawImage(GameAssets.GameBoard, 0, 0);
         for(int index = 0; index < gameBoard.length; index++){
             gameBoard[index].draw(getGameGraphics(), gems);
         }
 
-        getPaint().setColor(Color.WHITE);
-        getPaint().setTextSize(60.f);
         if(gemGrid[0] != null){
             getGameGraphics().drawRect(gemGrid[0].bounds(), Color.RED);
         }
         if(gemGrid[1] != null) {
             getGameGraphics().drawRect(gemGrid[1].bounds(), Color.YELLOW);
         }
+
+        getPaint().setColor(Color.WHITE);
+        getPaint().setTextSize(30.f);
+        getGameGraphics().drawString("" + totalScore,150,175,getPaint());
 //        getGameGraphics().drawString(eventX + " , " + eventY + " : ", 600,200,getPaint());
 //        getGameGraphics().drawString(testX + " , " + testY + " : ", 600,400,getPaint());
 
@@ -237,6 +271,8 @@ public class GameBoardScreen extends GameScreen {
 
     @Override
     public boolean onBackPressed() {
-        return true;
+         getGameActivity().setCurrentScreen(new MainMenuScreen(getGameActivity()));
+
+        return false;
     }
 }
