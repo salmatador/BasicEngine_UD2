@@ -58,6 +58,8 @@ public class LoadingScreen extends GameScreen {
     @Override
     public void init() {
 
+        GameAssets.GameBoard = getGameGraphics().newImage("board.png", GameGraphics.ImageFormat.ARGB8888);
+
         GameAssets.BlueGem3H = getGameGraphics().newImage("3blueH.png", GameGraphics.ImageFormat.ARGB8888);
         GameAssets.BlueGem3V = getGameGraphics().newImage("3blueV.png", GameGraphics.ImageFormat.ARGB8888);
 
@@ -209,6 +211,8 @@ public class LoadingScreen extends GameScreen {
         //getGameGraphics().drawImage(greenGem.getImage(index),400,300);
 
         getGameGraphics().clearScreen(Colors.BLACK);
+
+        getGameGraphics().drawImage(GameAssets.GameBoard,0,0);
 
         getGameGraphics().drawImage(orangeGem3H.getImage(index), 0,0);
         getGameGraphics().drawImage(orangeGem3V.getImage(index), 0, 50);

@@ -46,6 +46,8 @@ public class GameAssets {
     public static GameImage White3Bomb;
     public static GameImage Purple3Bomb;
     public static GameImage Orange3Bomb;
+
+    public static GameImage GameBoard;
     //Splash Screen Assets
     public static GameImage SplashImage;
     //MainMenu Assets

@@ -82,6 +82,9 @@ public class GameBoardScreen extends GameScreen {
             //Check which index is touched if any
 
             int index = eventY * 8 + eventX;
+
+            index = index - 1;
+            index = index - (4*8);
             //Log.d("Index", "index - " + index);
             if (index < 64 && index >= 0) {
 
@@ -199,6 +202,7 @@ public class GameBoardScreen extends GameScreen {
     @Override
     public void draw(float delta) {
         getGameGraphics().clearScreen(Colors.BLACK);
+        getGameGraphics().drawImage(GameAssets.GameBoard,0,0);
         for(int index = 0; index < gameBoard.length; index++){
             gameBoard[index].draw(getGameGraphics(), gems);
         }
