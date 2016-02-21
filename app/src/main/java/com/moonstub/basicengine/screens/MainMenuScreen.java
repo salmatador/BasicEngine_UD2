@@ -23,10 +23,10 @@ public class MainMenuScreen extends GameScreen{
     public void init() {
 
         //Load Main Menu Assets
-        MainMenuAssets.Background = getGameGraphics().newImage("board.png", GameGraphics.ImageFormat.ARGB8888);
-        MainMenuAssets.PlayPressed = getGameGraphics().newImage("board.png", GameGraphics.ImageFormat.ARGB8888);
-        MainMenuAssets.SettingsPressed = getGameGraphics().newImage("board.png", GameGraphics.ImageFormat.ARGB8888);
-        MainMenuAssets.CreditPressed = getGameGraphics().newImage("board.png", GameGraphics.ImageFormat.ARGB8888);
+        MainMenuAssets.Background = getGameGraphics().newImage("main_menu_assets/menuindex.png", GameGraphics.ImageFormat.ARGB8888);
+        MainMenuAssets.PlayPressed = getGameGraphics().newImage("main_menu_assets/menustart.png", GameGraphics.ImageFormat.ARGB8888);
+        MainMenuAssets.SettingsPressed = getGameGraphics().newImage("main_menu_assets/menusetting.png", GameGraphics.ImageFormat.ARGB8888);
+        MainMenuAssets.CreditPressed = getGameGraphics().newImage("main_menu_assets/menucredit.png", GameGraphics.ImageFormat.ARGB8888);
 
 
     }
@@ -65,8 +65,9 @@ public class MainMenuScreen extends GameScreen{
 
     @Override
     public void draw(float delta) {
-        getGameGraphics().clearScreen(Colors.BLACK);
-        getGameGraphics().drawImage(MainMenuAssets.Background,0,0);
+        getGameGraphics().clearScreen(Colors.GRAY);
+        getGameGraphics().drawImage(MainMenuAssets.Background, 0, 0);
+        getGameGraphics().drawImage(MainMenuAssets.CreditPressed, 0,0);
     }
 
     @Override
