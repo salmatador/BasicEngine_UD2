@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.moonstub.basicengine.Game;
 import com.moonstub.basicengine.GameAssets;
+import com.moonstub.basicengine.GameState;
 import com.moonstub.basicengine.classes.AnimateImage;
 import com.moonstub.basicengine.classes.GameGrid;
 import com.moonstub.basicengine.framework.Colors;
@@ -21,12 +22,14 @@ import java.util.ArrayList;
 public class GameBoardScreen extends GameScreen {
 
     AnimateImage[] gems;
+    ArrayList<TouchEvent.TouchEvents> events;
     GameGrid[] gameBoard;
+    boolean isRunning = true;
+    String mGameMessage = "";
     boolean mFirstRun = true;
     boolean isFull = true;
     float deltaSlow = 20.0f;
     float actualDeltaSlow = 0.0f;
-
     int totalScore = 0;
     int eventX = 0,eventY = 0;
     int testX = 0,testY = 0;
@@ -66,23 +69,60 @@ public class GameBoardScreen extends GameScreen {
 
         }
 
+        mGameState = GameState.RUNNING;
     }
 
-    @Override
-    public void update(float delta) {
+    public void update(float delta){
+        switch (mGameState){
+            case INIT:
+                init();
+                break;
+            case GAME_OVER:
+                mGameMessage = "Game Over";
+                runningUpdate(delta);
+                //runningGameOver(delta);
+                break;
+            case PAUSED:
+                break;
+            case RUNNING:
+                runningUpdate(delta);
+                break;
+            case LOADING:
+                break;
+            case DEMO:
+                break;
+            case RESUME:
+                break;
+            case NEXT:
+                break;
+            default:
+
+        }
+    }
+
+    private void runningGameOver(float delta) {
+        events = (ArrayList<TouchEvent.TouchEvents>) getGameActivity().getGameInput().getTouchEvents();
+
+        if(events.size() > 0){
+            mGameState = GameState.INIT;
+        }
+    }
+
+    public void runningUpdate(float delta) {
       actualDeltaSlow = delta + actualDeltaSlow;
 
-        ArrayList<TouchEvent.TouchEvents> events = (ArrayList<TouchEvent.TouchEvents>) getGameActivity()
+
+        events = (ArrayList<TouchEvent.TouchEvents>) getGameActivity()
                 .getGameInput().getTouchEvents();
 
         if(events.size() > 0 && events.get(0).type == TouchEvent.TouchEvents.TOUCH_DOWN) {
-            testX = events.get(0).x; // Replace 50 with variable
-            testY = events.get(0).y; // Ditto
+            testX = events.get(0).x;
+            testY = events.get(0).y;
 
-            eventX = testX / 100;
-            eventY = testY / 90;
+            eventX = testX / 100; // Replace 100 with variable
+            eventY = testY / 90;  // Ditto
+
             //Check which index is touched if any
-
             int index = eventY * 8 + eventX;
 
             index = index - 1;
@@ -95,12 +135,14 @@ public class GameBoardScreen extends GameScreen {
                 } else {
                     gemGrid[1] = gameBoard[index];
                     swapGems();
+
                 }
             }
         }
 
     if(actualDeltaSlow > deltaSlow) {
             isFull = checkZeroGrid();
+            //Log.d("Is Full", isFull + "");
             if (isFull) {
                 checkMatchGrid();
             }
@@ -110,6 +152,325 @@ public class GameBoardScreen extends GameScreen {
             }
             actualDeltaSlow = 0.0f;
         }
+    }
+
+    public boolean inBounds(int i){
+        if(i >= 0 && i < 64){
+            return true;
+        }
+        return false;
+    }
+    public boolean onZeroEdge(int i){
+        if(i % 8 == 0){
+            return true;
+        }
+        return false;
+    }
+    public boolean onEdge(int i){
+        if(i % 8 == 7){
+            return true;
+        }
+        return false;
+    }
+
+    private boolean checkForMoves(){
+        boolean check = false; // assume no moves available
+
+
+        for(int i = 0; i < 64; i++){
+            GameGrid c = gameBoard[i];
+
+            // -*-
+            // *c*
+
+            // make sure i % 8 != 0 or 7
+            if(i % 8 > 0 && i % 8 < 7)
+            if(inBounds(i-8) && inBounds(i-1) && inBounds(i+1)){
+                if(gameBoard[i - 8].getGemIndex() == gameBoard[i + 1].getGemIndex() &&
+                        gameBoard[i - 8].getGemIndex() == gameBoard[i - 1].getGemIndex()){
+                    //check = true;
+                    return true;
+                }
+            }
+
+            // *c*
+            // -*-
+
+            // make sure i % 8 != 0 or 7
+            if(i % 8 > 0 && i % 8 < 7)
+            if(inBounds(i+8) && inBounds(i-1) && inBounds(i+1) ){
+                if(gameBoard[i + 8].getGemIndex() == gameBoard[i - 1].getGemIndex() &&
+                        gameBoard[i + 8].getGemIndex() == gameBoard[i + 1].getGemIndex()){
+                    //check = true;
+                    return true;
+                }
+            }
+
+            // -*
+            // *c
+            // -*
+
+            // make sure i % 8 != 0
+            if(i % 8 > 0)
+            if(inBounds(i-1) && inBounds(i+8) && inBounds(i-8) ){
+                if(gameBoard[i - 1].getGemIndex() == gameBoard[i + 8].getGemIndex() &&
+                        gameBoard[i - 1].getGemIndex() == gameBoard[i - 8].getGemIndex()){
+                    //check = true;
+                    return true;
+                }
+            }
+
+            // *-
+            // c*
+            // *-
+
+            // make sure i % 8 != 7
+            if(i % 8 < 7)
+            if(inBounds(i+1) && inBounds(i-8) && inBounds(i+8) ){
+                if(gameBoard[i + 1].getGemIndex() == gameBoard[i - 8].getGemIndex() &&
+                        gameBoard[i + 1].getGemIndex() == gameBoard[i + 8].getGemIndex()){
+                    //check = true;
+                    return true;
+                }
+            }
+
+            // **c*
+
+            // make sure i % 8 > 1 < 7
+            if(i% 8 > 1 && i % 8 < 7)
+            if(inBounds(i-1) && inBounds(i-2) && inBounds(i+1)){
+                if(gameBoard[i - 1].getGemIndex() == gameBoard[i - 2].getGemIndex() &&
+                        gameBoard[i - 1].getGemIndex() == gameBoard[i + 1].getGemIndex()){
+                    //check = true;
+                    return true;
+                }
+            }
+            // *c**
+
+            //make sure i % 8 > 0 < 6
+            if(i % 8 > 0 && i % 8 < 6)
+            if(inBounds(i-1) && inBounds(i+1) && inBounds(i+2)){
+                if(gameBoard[i - 1].getGemIndex() == gameBoard[i + 1].getGemIndex() &&
+                        gameBoard[i - 1].getGemIndex() == gameBoard[i + 2].getGemIndex()){
+                    //check = true;
+                    return true;
+                }
+            }
+            // *
+            // *
+            // c
+            // *
+            if(inBounds(i+8) && inBounds(i-8) && inBounds(i-16)){
+                if(gameBoard[i + 8].getGemIndex() == gameBoard[i - 8].getGemIndex() &&
+                        gameBoard[i + 8].getGemIndex() == gameBoard[i - 16].getGemIndex()){
+                    //check = true;
+                    return true;
+                }
+            }
+            // *
+            // c
+            // *
+            // *
+            if(inBounds(i-8) && inBounds(i+8) && inBounds(i+16)){
+                if(gameBoard[i - 8].getGemIndex() == gameBoard[i + 8].getGemIndex() &&
+                        gameBoard[i - 8].getGemIndex() == gameBoard[i + 16].getGemIndex()){
+                    //check = true;
+                    return true;
+                }
+            }
+            // c**
+            // *--
+
+            // Make sure i % 8 < 6
+            if(i % 8 < 6)
+            if(inBounds(i+8) && inBounds(i+1) && inBounds(i+2)){
+                if(gameBoard[i + 8].getGemIndex() == gameBoard[i + 1].getGemIndex() &&
+                        gameBoard[i + 8].getGemIndex() == gameBoard[i + 2].getGemIndex()){
+                    //check = true;
+                    return true;
+                }
+            }
+            // *--
+            // c**
+
+            // Make sure i % 8 < 6
+            if(i % 8 < 6)
+            if(inBounds(i-8) && inBounds(i+1) && inBounds(i+2)){
+                if(gameBoard[i - 8].getGemIndex() == gameBoard[i + 1].getGemIndex() &&
+                        gameBoard[i - 8].getGemIndex() == gameBoard[i + 2].getGemIndex()){
+                    //check = true;
+                    return true;
+                }
+            }
+
+            // -*
+            // -*
+            // *c
+            // Make sure i % 8 > 0
+            if(i % 8 > 0)
+            if(inBounds(i-1) && inBounds(i-8) && inBounds(i-16)){
+                if(gameBoard[i - 1].getGemIndex() == gameBoard[i - 8].getGemIndex() &&
+                        gameBoard[i - 1].getGemIndex() == gameBoard[i - 16].getGemIndex()){
+                    //check = true;
+                    return true;
+                }
+            }
+            // *-
+            // *-
+            // c*
+            // Make sure i % 8 < 7
+            if(i % 8 < 7)
+            if(inBounds(i+1) && inBounds(i-8) && inBounds(i-16)){
+                if(gameBoard[i + 1].getGemIndex() == gameBoard[i -8].getGemIndex() &&
+                        gameBoard[i + 1].getGemIndex() == gameBoard[i -16].getGemIndex()){
+                    //check = true;
+                    return true;
+                }
+            }
+            // **c
+            // --*
+            // Make sure i % 8 > 1
+            if(i % 8 > 1)
+            if(inBounds(i+8) && inBounds(i-1) && inBounds(i-2)){
+                if(gameBoard[i + 8].getGemIndex() == gameBoard[i - 1].getGemIndex() &&
+                        gameBoard[i + 8].getGemIndex() == gameBoard[i - 2].getGemIndex()){
+                    //check = true;
+                    return true;
+                }
+            }
+            // --*
+            // **c
+            // Make sure i % 8 > 1
+            if(i % 8 > 1)
+            if(inBounds(i-8) && inBounds(i-1) && inBounds(i-2)){
+                if(gameBoard[i - 8].getGemIndex() == gameBoard[i - 1].getGemIndex() &&
+                        gameBoard[i - 8].getGemIndex() == gameBoard[i - 2].getGemIndex()){
+                    //check = true;
+                    return true;
+                }
+            }
+            // *c
+            // -*
+            // -*
+            // Make sure i % 8 > 0
+            if(i % 8 > 0)
+            if(inBounds(i-1) && inBounds(i+8) && inBounds(i+16)){
+                if(gameBoard[i - 1].getGemIndex() == gameBoard[i + 8].getGemIndex() &&
+                        gameBoard[i - 1].getGemIndex() == gameBoard[i + 16].getGemIndex()){
+                    //check = true;
+                    return true;
+                }
+            }
+            // c*
+            // *-
+            // *-
+            // Make sure i % 8 < 7
+            if(i % 8 < 7)
+            if(inBounds(i+1) && inBounds(i+8) && inBounds(i+16)){
+                if(gameBoard[i + 1].getGemIndex() == gameBoard[i + 8].getGemIndex() &&
+                        gameBoard[i + 1].getGemIndex() == gameBoard[i + 16].getGemIndex()){
+                    //check = true;
+                    return true;
+                }
+            }
+
+
+        }
+        return false;
+    }
+
+    private boolean checkHasMove() {
+        boolean check=false;
+        for(int i = 0; i < 64; i++){
+            GameGrid c = gameBoard[i];
+            //check left and right
+            if(c.getIndex()+3<64){//right inline
+                if(c.getGemIndex()==gameBoard[i+1].getGemIndex()&&
+                        c.getGemIndex()==gameBoard[i+3].getGemIndex() &&
+                        c.getY()==gameBoard[1+3].getY()) {
+                    check = true;
+                }
+            }else if(c.getX()+2<8 && c.getY()+1<8){//right L down
+                if(c.getGemIndex()==gameBoard[i+1].getGemIndex()&&
+                        c.getGemIndex()==gameBoard[i+2+8].getGemIndex()){
+                    check =true;
+                }
+            }else if(c.getX()+2<8 && c.getY()-1>=0){//right L up
+                if(c.getGemIndex()==gameBoard[i+1].getGemIndex()&&
+                        c.getGemIndex()==gameBoard[i+2-8].getGemIndex()){
+                    check = true;
+                }
+            }else if(c.getIndex()-3>=0){//left inline
+                if(c.getGemIndex()==gameBoard[i-1].getGemIndex()&&
+                        c.getGemIndex()==gameBoard[i-3].getGemIndex() &&
+                        c.getY()==gameBoard[1-3].getY()) {
+                    check = true;
+                }
+            }else if(c.getX()-2>=0 && c.getY()+1<8){//left L down
+                if(c.getGemIndex()==gameBoard[i-1].getGemIndex()&&
+                        c.getGemIndex()==gameBoard[i-2+8].getGemIndex()){
+                    check = true;
+                }
+            }else if(c.getX()-2>=0 && c.getY()-1>=0){//left L up
+                if(c.getGemIndex()==gameBoard[i-1].getGemIndex()&&
+                        c.getGemIndex()==gameBoard[i-2-8].getGemIndex()){
+                    check = true;
+                }
+            }else if(c.getX()-2>=0 && c.getY()-1>=0){//V up
+                if(c.getGemIndex()==gameBoard[i-2].getGemIndex()&&
+                        c.getGemIndex()==gameBoard[i-1-8].getGemIndex()){
+                    check = true;
+                }
+            }else if(c.getX()-2>=0 && c.getY()+1<8){//V down
+                if(c.getGemIndex()==gameBoard[i-2].getGemIndex()&&
+                        c.getGemIndex()==gameBoard[i-1+8].getGemIndex()){
+                    check = true;
+                }
+            }
+            //check up and down
+            else if(c.getY()+3<8){//down inline
+                if(c.getGemIndex()==gameBoard[i+8].getGemIndex() &&
+                        c.getGemIndex()==gameBoard[i+24].getGemIndex()){
+                    check = true;
+                }
+            }else if(c.getY()+2<8 && c.getX()+1<8){//down L right
+                if(c.getGemIndex()==gameBoard[i+8].getGemIndex() &&
+                        c.getGemIndex()==gameBoard[i+16+1].getGemIndex()){
+                    check = true;
+                }
+            }else if(c.getY()+2<8 && c.getX()-1>=0){//down L left
+                if(c.getGemIndex()==gameBoard[i+8].getGemIndex() &&
+                        c.getGemIndex()==gameBoard[i+16-1].getGemIndex()){
+                    check = true;
+                }
+            }else if(c.getY()-3>=0){//up inline
+                if(c.getGemIndex()==gameBoard[i-8].getGemIndex() &&
+                        c.getGemIndex()==gameBoard[i-24].getGemIndex()){
+                    check = true;
+                }
+            }else if(c.getY()-2>=0 && c.getX()+1<8){//up L right
+                if(c.getGemIndex()==gameBoard[i-8].getGemIndex() &&
+                        c.getGemIndex()==gameBoard[i-16+1].getGemIndex()){
+                    check = true;
+                }
+            }else if(c.getY()-2>=0 && c.getX()-1>=0){//up L left
+                if(c.getGemIndex()==gameBoard[i-8].getGemIndex() &&
+                        c.getGemIndex()==gameBoard[i-16-1].getGemIndex()){
+                    check = true;
+                }
+            }else if(c.getY()+2<8 && c.getX()+1<8){//V right
+                if(c.getGemIndex()==gameBoard[i+16].getGemIndex() &&
+                        c.getGemIndex()==gameBoard[i+8+1].getGemIndex()){
+                    check = true;
+                }
+            }else if(c.getY()+2<8 && c.getX()-1>=0){//V left
+                if(c.getGemIndex()==gameBoard[i+16].getGemIndex() &&
+                        c.getGemIndex()==gameBoard[i+8-1].getGemIndex()){
+                    check = true;
+                }
+            }
+        }
+        return check;
     }
 
 
@@ -215,7 +576,6 @@ public class GameBoardScreen extends GameScreen {
     // grid above if the grid is off screen it randomly chooses a new gem
     private boolean checkZeroGrid() {
         boolean notEmptyGem = true;
-
         for(int i = 63; i >= 0; i--){
                 if (gameBoard[i].isEmpty()) {
                     if(i > 8){
@@ -226,7 +586,8 @@ public class GameBoardScreen extends GameScreen {
                     }
                     notEmptyGem = false;
                 }
-            }
+        }
+
 
         return notEmptyGem;
     }
@@ -234,7 +595,8 @@ public class GameBoardScreen extends GameScreen {
     @Override
     public void draw(float delta) {
         getGameGraphics().clearScreen(Colors.BLACK);
-        getGameGraphics().drawImage(GameAssets.GameBoard, 0, 0);
+        //getGameGraphics().drawImage(GameAssets.GameBoard, 0, 0);
+        getGameGraphics().drawScaledImage(GameAssets.GameBoard,0,0,getCanvas().getWidth(),getCanvas().getHeight());
         for(int index = 0; index < gameBoard.length; index++){
             gameBoard[index].draw(getGameGraphics(), gems);
         }
@@ -249,6 +611,12 @@ public class GameBoardScreen extends GameScreen {
         getPaint().setColor(Color.WHITE);
         getPaint().setTextSize(30.f);
         getGameGraphics().drawString("" + totalScore,150,175,getPaint());
+
+        if(mGameState == GameState.GAME_OVER){
+            getPaint().setColor(Color.WHITE);
+            getPaint().setTextSize(60.f);
+            getGameGraphics().drawString(mGameMessage, 300,400,getPaint());
+        }
 //        getGameGraphics().drawString(eventX + " , " + eventY + " : ", 600,200,getPaint());
 //        getGameGraphics().drawString(testX + " , " + testY + " : ", 600,400,getPaint());
 
