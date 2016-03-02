@@ -45,26 +45,17 @@ public class GameGrid {
         return y * 8 + x;
     }
     public void updateFrame(float delta){
-        //timeElapsed = timeElapsed + delta;
-        //if(timeElapsed >= animationDelay) {
             currentFrame++;
             if (currentFrame > maxFrame) {
                 currentFrame = 0;
             }
-          //  timeElapsed = 0.0f;
-        //}
     }
 
     public void draw(GameGraphics graphics, AnimateImage[] gemImage){
-        //if(gemIndex != 0){
         graphics.drawScaledImage(gemImage[gemIndex]
                 .getImage(currentFrame),(getX()*size)+ GameSettings.OFFSET_X,
                 (getY()*size) + GameSettings.OFFSET_Y,size,size);
-//        Log.d("Size of Drawing",
-//                gemImage[gemIndex].getImage(currentFrame).getWidth() +
-//                        " , " +
-//                        gemImage[gemIndex].getImage(currentFrame).getHeight());
-        //}
+
     }
 
     public int getX(){ return this.x; }

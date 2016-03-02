@@ -79,8 +79,8 @@ public class GameBoardScreen extends GameScreen {
                 break;
             case GAME_OVER:
                 mGameMessage = "Game Over";
-                runningUpdate(delta);
-                //runningGameOver(delta);
+                //runningUpdate(delta);
+                runningGameOver(delta);
                 break;
             case PAUSED:
                 break;
@@ -105,9 +105,15 @@ public class GameBoardScreen extends GameScreen {
 
         if(events.size() > 0){
             mGameState = GameState.INIT;
+            mFirstRun = true;
+            totalScore = 0;
+            mGameMessage = "";
         }
     }
 
+    public void processUpdate(float delta){
+
+    }
     public void runningUpdate(float delta) {
       actualDeltaSlow = delta + actualDeltaSlow;
 
@@ -142,15 +148,21 @@ public class GameBoardScreen extends GameScreen {
 
     if(actualDeltaSlow > deltaSlow) {
             isFull = checkZeroGrid();
-            //Log.d("Is Full", isFull + "");
             if (isFull) {
                 checkMatchGrid();
+                isFull = checkZeroGrid();
             }
             for (int index = 0; index < gameBoard.length; index++) {
                 gameBoard[index].setMaxFrame(gems[gameBoard[index].getGemIndex()].getFrameCount());
                 gameBoard[index].updateFrame(delta);
             }
             actualDeltaSlow = 0.0f;
+
+        if(isFull){
+            if(!checkForMoves()) {
+                mGameState = GameState.GAME_OVER;
+            }
+        }
         }
     }
 
@@ -379,101 +391,6 @@ public class GameBoardScreen extends GameScreen {
         return false;
     }
 
-    private boolean checkHasMove() {
-        boolean check=false;
-        for(int i = 0; i < 64; i++){
-            GameGrid c = gameBoard[i];
-            //check left and right
-            if(c.getIndex()+3<64){//right inline
-                if(c.getGemIndex()==gameBoard[i+1].getGemIndex()&&
-                        c.getGemIndex()==gameBoard[i+3].getGemIndex() &&
-                        c.getY()==gameBoard[1+3].getY()) {
-                    check = true;
-                }
-            }else if(c.getX()+2<8 && c.getY()+1<8){//right L down
-                if(c.getGemIndex()==gameBoard[i+1].getGemIndex()&&
-                        c.getGemIndex()==gameBoard[i+2+8].getGemIndex()){
-                    check =true;
-                }
-            }else if(c.getX()+2<8 && c.getY()-1>=0){//right L up
-                if(c.getGemIndex()==gameBoard[i+1].getGemIndex()&&
-                        c.getGemIndex()==gameBoard[i+2-8].getGemIndex()){
-                    check = true;
-                }
-            }else if(c.getIndex()-3>=0){//left inline
-                if(c.getGemIndex()==gameBoard[i-1].getGemIndex()&&
-                        c.getGemIndex()==gameBoard[i-3].getGemIndex() &&
-                        c.getY()==gameBoard[1-3].getY()) {
-                    check = true;
-                }
-            }else if(c.getX()-2>=0 && c.getY()+1<8){//left L down
-                if(c.getGemIndex()==gameBoard[i-1].getGemIndex()&&
-                        c.getGemIndex()==gameBoard[i-2+8].getGemIndex()){
-                    check = true;
-                }
-            }else if(c.getX()-2>=0 && c.getY()-1>=0){//left L up
-                if(c.getGemIndex()==gameBoard[i-1].getGemIndex()&&
-                        c.getGemIndex()==gameBoard[i-2-8].getGemIndex()){
-                    check = true;
-                }
-            }else if(c.getX()-2>=0 && c.getY()-1>=0){//V up
-                if(c.getGemIndex()==gameBoard[i-2].getGemIndex()&&
-                        c.getGemIndex()==gameBoard[i-1-8].getGemIndex()){
-                    check = true;
-                }
-            }else if(c.getX()-2>=0 && c.getY()+1<8){//V down
-                if(c.getGemIndex()==gameBoard[i-2].getGemIndex()&&
-                        c.getGemIndex()==gameBoard[i-1+8].getGemIndex()){
-                    check = true;
-                }
-            }
-            //check up and down
-            else if(c.getY()+3<8){//down inline
-                if(c.getGemIndex()==gameBoard[i+8].getGemIndex() &&
-                        c.getGemIndex()==gameBoard[i+24].getGemIndex()){
-                    check = true;
-                }
-            }else if(c.getY()+2<8 && c.getX()+1<8){//down L right
-                if(c.getGemIndex()==gameBoard[i+8].getGemIndex() &&
-                        c.getGemIndex()==gameBoard[i+16+1].getGemIndex()){
-                    check = true;
-                }
-            }else if(c.getY()+2<8 && c.getX()-1>=0){//down L left
-                if(c.getGemIndex()==gameBoard[i+8].getGemIndex() &&
-                        c.getGemIndex()==gameBoard[i+16-1].getGemIndex()){
-                    check = true;
-                }
-            }else if(c.getY()-3>=0){//up inline
-                if(c.getGemIndex()==gameBoard[i-8].getGemIndex() &&
-                        c.getGemIndex()==gameBoard[i-24].getGemIndex()){
-                    check = true;
-                }
-            }else if(c.getY()-2>=0 && c.getX()+1<8){//up L right
-                if(c.getGemIndex()==gameBoard[i-8].getGemIndex() &&
-                        c.getGemIndex()==gameBoard[i-16+1].getGemIndex()){
-                    check = true;
-                }
-            }else if(c.getY()-2>=0 && c.getX()-1>=0){//up L left
-                if(c.getGemIndex()==gameBoard[i-8].getGemIndex() &&
-                        c.getGemIndex()==gameBoard[i-16-1].getGemIndex()){
-                    check = true;
-                }
-            }else if(c.getY()+2<8 && c.getX()+1<8){//V right
-                if(c.getGemIndex()==gameBoard[i+16].getGemIndex() &&
-                        c.getGemIndex()==gameBoard[i+8+1].getGemIndex()){
-                    check = true;
-                }
-            }else if(c.getY()+2<8 && c.getX()-1>=0){//V left
-                if(c.getGemIndex()==gameBoard[i+16].getGemIndex() &&
-                        c.getGemIndex()==gameBoard[i+8-1].getGemIndex()){
-                    check = true;
-                }
-            }
-        }
-        return check;
-    }
-
-
     private void swapGems() {
         if(isValidMove(gemGrid[0],gemGrid[1])) {
             int tempGemIndex;
@@ -595,8 +512,8 @@ public class GameBoardScreen extends GameScreen {
     @Override
     public void draw(float delta) {
         getGameGraphics().clearScreen(Colors.BLACK);
-        //getGameGraphics().drawImage(GameAssets.GameBoard, 0, 0);
-        getGameGraphics().drawScaledImage(GameAssets.GameBoard,0,0,getCanvas().getWidth(),getCanvas().getHeight());
+        getGameGraphics().drawImage(GameAssets.GameBoard, 0, 0);
+        //getGameGraphics().drawScaledImage(GameAssets.GameBoard,0,0,getCanvas().getWidth(),getCanvas().getHeight());
         for(int index = 0; index < gameBoard.length; index++){
             gameBoard[index].draw(getGameGraphics(), gems);
         }
@@ -615,7 +532,7 @@ public class GameBoardScreen extends GameScreen {
         if(mGameState == GameState.GAME_OVER){
             getPaint().setColor(Color.WHITE);
             getPaint().setTextSize(60.f);
-            getGameGraphics().drawString(mGameMessage, 300,400,getPaint());
+            getGameGraphics().drawString(mGameMessage, 100,400,getPaint());
         }
 //        getGameGraphics().drawString(eventX + " , " + eventY + " : ", 600,200,getPaint());
 //        getGameGraphics().drawString(testX + " , " + testY + " : ", 600,400,getPaint());
