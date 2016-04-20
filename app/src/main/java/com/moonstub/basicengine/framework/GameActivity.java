@@ -13,7 +13,8 @@ import com.moonstub.basicengine.input.GameInput;
 
 public abstract class GameActivity extends AppCompatActivity {
 
-    private static final String LOG_TAG = GameActivity.class.getSimpleName();
+    private static final String LOG_TAG = GameActivity
+            .class.getSimpleName();
 
     private GameState mGameState = GameState.INIT;
 
