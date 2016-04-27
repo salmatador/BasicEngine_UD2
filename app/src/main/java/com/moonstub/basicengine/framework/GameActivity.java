@@ -60,9 +60,10 @@ public abstract class GameActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             Point size = new Point();
             getWindowManager().getDefaultDisplay().getRealSize(size);
-            scaleX = (float) width / size.x;
-            scaleY = (float) height / size.y;
-            mGameBuffer = Bitmap.createBitmap(size.x/2, size.y/2, Bitmap.Config.RGB_565);
+            getWindowManager().getDefaultDisplay().getSize(size);
+            width = size.x;
+            height = size.y;
+            mGameBuffer = Bitmap.createBitmap(size.x, size.y, Bitmap.Config.RGB_565);
         } else {
             DisplayMetrics dmSize = new DisplayMetrics();
             getWindowManager().getDefaultDisplay().getMetrics(dmSize);
