@@ -8,8 +8,10 @@ import com.moonstub.basicengine.framework.Colors;
 import com.moonstub.basicengine.framework.GameActivity;
 import com.moonstub.basicengine.framework.GameScreen;
 import com.moonstub.basicengine.gameClasses.ActionButton;
+import com.moonstub.basicengine.gameClasses.BaseEntity;
 import com.moonstub.basicengine.gameClasses.Enemy;
 import com.moonstub.basicengine.gameClasses.PlayerClass;
+import com.moonstub.basicengine.gameScreens.MainGameScreen;
 import com.moonstub.basicengine.input.TouchEvent;
 
 import java.util.ArrayList;
@@ -37,6 +39,7 @@ public class Game extends GameActivity {
 
         ArrayList<PlayerClass> mPlayerClassArrayList;
 
+        BaseEntity testBaseEntity;
 
         public TestScreen(Game game) {
             super(game);
@@ -44,6 +47,9 @@ public class Game extends GameActivity {
 
         @Override
         public void init() {
+
+            testBaseEntity = new BaseEntity(500,500,50);
+
             testEnemy = new Enemy(getGameActivity(), 50,50,50);
             testButton = new ActionButton(50,1200,100);
             testButton2 = new ActionButton(850,1200,100);
@@ -60,8 +66,15 @@ public class Game extends GameActivity {
                 }
 
             mEnemyArrayList = new ArrayList<>();
-            for (int index = 0; index < 5; index++) {
-                mEnemyArrayList.add(new Enemy(getGameActivity(),(50 * index), 50,25));
+            for (int indexY = 0; indexY < 5; indexY++) {
+                for(int indexX = 0; indexX < 10; indexX++)
+                {
+                    mEnemyArrayList.add(new Enemy(getGameActivity(),(55 * indexX), (55 * indexY),50));
+                    int value = indexY * 10 + indexX;
+                    if(value % 2 == 0){
+                        mEnemyArrayList.get(value).setIsAlive(false);
+                    }
+                }
             }
 
         }
@@ -69,23 +82,8 @@ public class Game extends GameActivity {
         @Override
         public void update(float delta) {
             List<TouchEvent.TouchEvents> event = getGameActivity().getGameInput().getTouchEvents();
-            //Log.d("Test Screen",
-            //        x + " : " + getGameGraphics().getWidth());
-//            if( x >= 440) {
-//                x = 440;
-//                step = step * -1;
-//            }
-//
-//            if(x < 0 ){
-//                x = 0;
-//                step = step * -1;
-//            }
-
-//            x = x + step;
-
 
             if(event.size() > 0){
-                //currentColor = !currentColor;
                 if(testButton.getBounds().contains(event.get(0).x,event.get(0).y)){
                     testButton.setIsTouched(!testButton.isTouched());
                 } else if(testButton2.getBounds().contains(event.get(0).x,event.get(0).y)){
@@ -96,8 +94,8 @@ public class Game extends GameActivity {
                     }
                 }
 
-                x = event.get(0).x/ 2;
-                y = event.get(0).y/ 2;
+                x = event.get(0).x;
+                y = event.get(0).y;
 
                 Log.d("Test Button", testButton.getX() + " , " + testButton.getY() +
                 " : " + event.get(0).x + " , " + event.get(0).y);
@@ -118,10 +116,16 @@ public class Game extends GameActivity {
                 testButton.setIsTouched(false);
                 playerOne.move(10);
             }
-            playerOne.update();
+            playerOne.update(mEnemyArrayList);
             //testEnemy.update();
             for (int index = 0; index < mEnemyArrayList.size(); index++) {
-                mEnemyArrayList.get(index).update(mEnemyArrayList);
+                if(mEnemyArrayList.get(index).wallCheck()){
+                    mEnemyArrayList.get(index).phoneHome(mEnemyArrayList);
+                    break;
+                }
+            }
+            for(int index = 0; index < mEnemyArrayList.size(); index++){
+                mEnemyArrayList.get(index).update();
             }
 
         }
@@ -130,8 +134,6 @@ public class Game extends GameActivity {
         public void draw(float delta) {
 
             getGameGraphics().clearScreen((currentColor) ? Colors.BLACK : Colors.BLACK);
-            //getGameGraphics().drawFillRect(new Rect(x, y, x + size, y + size), Color.CYAN);
-
 
             for(int index = 0; index < mPlayerClassArrayList.size();
                 index++){
@@ -148,13 +150,8 @@ public class Game extends GameActivity {
             for(int index = 0; index < mEnemyArrayList.size(); index++){
                 mEnemyArrayList.get(index).draw(getGameGraphics());
             }
-            //for (Enemy e : mEnemyArrayList) {
-            //    e.draw(getGameGraphics());
-            //}
-            //testEnemy.draw(getGameGraphics());
-            //getPaint().setColor(Color.WHITE);
-            //getPaint().setTextSize(50.0f);
-            //getGameGraphics().drawString(x + " : " + y,100,200,getPaint());
+
+            testBaseEntity.draw(getGameGraphics());
 
         }
 
@@ -175,6 +172,7 @@ public class Game extends GameActivity {
 
         @Override
         public boolean onBackPressed() {
+            getGameActivity().setCurrentScreen(new MainGameScreen(getGameActivity()));
             return false;
         }
     }

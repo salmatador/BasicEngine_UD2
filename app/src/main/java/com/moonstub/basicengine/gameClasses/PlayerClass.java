@@ -8,6 +8,8 @@ import com.moonstub.basicengine.framework.GameActivity;
 import com.moonstub.basicengine.framework.GameGraphics;
 import com.moonstub.basicengine.framework.GameSettings;
 
+import java.util.ArrayList;
+
 /**
  * Created by Micah on 4/19/2016.
  */
@@ -39,14 +41,16 @@ public class PlayerClass {
         }
     }
 
-    public void update(){
+    public void update(ArrayList<Enemy> enemy){
         for (int i = 0; i < mBullets.length; i++) {
             if(mBullets[i].isAlive()) {
                 mBullets[i].move();
+                mBullets[i].checkCollision(enemy);
             }
         }
 
     }
+
     public void move(int step){
         x = x + step;
         if( x  < 0){
@@ -60,7 +64,7 @@ public class PlayerClass {
     public void fire(){
         int index = currentBullet;
         if(!mBullets[index].isAlive()) {
-            mBullets[index] = new Bullet(x + (width / 2), y - 10);
+            mBullets[index] = new Bullet(x + (width / 2), y - 10,true);
         }
             currentBullet = ((currentBullet + 1) % mBullets.length);
     }
