@@ -40,7 +40,8 @@ public class GameGraphics {
 
         return new GameImage(bitmap, ImageFormat.ARGB8888);
     }
-    public GameImage newImage(String fileName, ImageFormat format) {
+    public GameImage newImage(String fileName) {
+        ImageFormat format = ImageFormat.ARGB8888;
         //Bitmap.Config config = Bitmap.Config.ARGB_8888;
         //BitmapFactory.Options options = new BitmapFactory.Options();
         //options.inPreferredConfig = config;
@@ -127,8 +128,15 @@ public class GameGraphics {
 
     }
 
-    public void drawString(String text, int x, int y, Paint paint) {
-        mCanvas.drawText(text, x, y, paint);
+    public void drawString(String text, int x, int y){
+        mPaint.setTextSize(25.0f);
+        mPaint.setColor(Color.WHITE);
+        mCanvas.drawText(text,x,y,mPaint);
+    }
+    public void drawString(String text, int x, int y, float size, int color) {
+        mPaint.setTextSize(size);
+        mPaint.setColor(color);
+        mCanvas.drawText(text, x, y, mPaint);
     }
 
     public void drawImage(GameImage image, int x, int y){

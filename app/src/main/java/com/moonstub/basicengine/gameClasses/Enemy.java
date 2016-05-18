@@ -4,8 +4,10 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.util.Log;
 
+import com.moonstub.basicengine.GameAssets;
 import com.moonstub.basicengine.framework.GameActivity;
 import com.moonstub.basicengine.framework.GameGraphics;
+import com.moonstub.basicengine.framework.GameImage;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -19,6 +21,7 @@ public class Enemy {
     boolean isAlive,direction,drop;
     GameActivity game;
     Bullet mBullet;
+    GameImage mGameImage;
     //private boolean mDrop;
 
     public Enemy(GameActivity game, int x, int y, int size){
@@ -29,6 +32,7 @@ public class Enemy {
         setDirection(true);
         setIsAlive(true);
         mBullet = new Bullet();
+        mGameImage = GameAssets.TestAsset;
     }
 
     public void fire(){
@@ -40,7 +44,12 @@ public class Enemy {
     }
     public void draw(GameGraphics graphics){
         if(isAlive()){
-            graphics.drawFillRect(new Rect(x, y, x + size, y + size), Color.CYAN);
+            if(mGameImage != null){
+                //graphics.drawImage(mGameImage,x,y);
+                graphics.drawScaledImage(mGameImage,x,y,50,50);
+            } else {
+                graphics.drawFillRect(new Rect(x, y, x + size, y + size), Color.CYAN);
+            }
         }
         if(mBullet.isAlive()){
             mBullet.draw(graphics);

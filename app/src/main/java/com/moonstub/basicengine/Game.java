@@ -30,14 +30,12 @@ public class Game extends GameActivity {
         int size = 100;
         int step = 20;
         boolean currentColor;
-        Enemy testEnemy;
+
+        //Enemy testEnemy;
         ArrayList<Enemy> mEnemyArrayList;
         PlayerClass playerOne;
-        PlayerClass playerTwo;
         ActionButton testButton;
         ActionButton testButton2;
-
-        ArrayList<PlayerClass> mPlayerClassArrayList;
 
         BaseEntity testBaseEntity;
 
@@ -47,23 +45,14 @@ public class Game extends GameActivity {
 
         @Override
         public void init() {
-
+            GameAssets.TestAsset = getGameGraphics().newImage("testBob.png");
             testBaseEntity = new BaseEntity(500,500,50);
 
-            testEnemy = new Enemy(getGameActivity(), 50,50,50);
+            //testEnemy = new Enemy(getGameActivity(), 50,50,50);
             testButton = new ActionButton(50,1200,100);
             testButton2 = new ActionButton(850,1200,100);
             playerOne = new PlayerClass(getGameActivity(),200,1000);
             playerOne.setColor(Color.BLUE);
-            playerTwo = new PlayerClass(getGameActivity(),0,400);
-            playerTwo.setColor(Color.RED);
-
-            mPlayerClassArrayList = new ArrayList<>();
-                for (int xIndex = 0; xIndex < 4; xIndex++) {
-                    mPlayerClassArrayList.add(new PlayerClass(getGameActivity(),xIndex * 100
-                            , xIndex * 100));
-                    //mPlayerClassArrayList.get(index).setColor(index);
-                }
 
             mEnemyArrayList = new ArrayList<>();
             for (int indexY = 0; indexY < 5; indexY++) {
@@ -103,10 +92,7 @@ public class Game extends GameActivity {
             if(event.size() > 1){
 
             }
-            for(int index = 0; index < mPlayerClassArrayList.size();
-                    index++){
-                mPlayerClassArrayList.get(index).move(-10);
-            }
+
             if(testButton.isTouched()) {
                 testButton2.setIsTouched(false);
                 playerOne.move(-10);
@@ -135,17 +121,10 @@ public class Game extends GameActivity {
 
             getGameGraphics().clearScreen((currentColor) ? Colors.BLACK : Colors.BLACK);
 
-            for(int index = 0; index < mPlayerClassArrayList.size();
-                index++){
-                mPlayerClassArrayList
-                        .get(index).draw(getGameGraphics());
-            }
-
             testButton.draw(getGameGraphics());
             testButton2.draw(getGameGraphics());
 
             playerOne.draw(getGameGraphics());
-            playerTwo.draw(getGameGraphics());
 
             for(int index = 0; index < mEnemyArrayList.size(); index++){
                 mEnemyArrayList.get(index).draw(getGameGraphics());
@@ -153,6 +132,10 @@ public class Game extends GameActivity {
 
             testBaseEntity.draw(getGameGraphics());
 
+            getGameGraphics().drawString("1080 , 1776",200,200,35.0f,Color.WHITE);
+            String w = getGameGraphics().getWidth() + "";
+            String h = getGameGraphics().getHeight() + "";
+            getGameGraphics().drawString(w + " , " + h, 200,300,45.0f, Color.CYAN);
         }
 
         @Override

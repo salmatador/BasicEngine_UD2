@@ -1,5 +1,6 @@
 package com.moonstub.basicengine.input;
 
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -73,7 +74,8 @@ public class GameInputHandler implements InputHandler {
                     mIsTouched = false;
                     break;
                 default:
-                    throw new IllegalArgumentException();
+                    Log.e("Input Error", event.getAction() + "");
+                    //throw new IllegalArgumentException();
             }
 
             touchEvent.x = mTouchX = (int) (event.getRawX());// * mScaleX);
