@@ -6,12 +6,14 @@ import android.util.Log;
 
 import com.moonstub.basicengine.framework.Colors;
 import com.moonstub.basicengine.framework.GameActivity;
+import com.moonstub.basicengine.framework.GameImage;
 import com.moonstub.basicengine.framework.GameScreen;
 import com.moonstub.basicengine.gameClasses.ActionButton;
 import com.moonstub.basicengine.gameClasses.BaseEntity;
 import com.moonstub.basicengine.gameClasses.Enemy;
 import com.moonstub.basicengine.gameClasses.PlayerClass;
 import com.moonstub.basicengine.gameScreens.MainGameScreen;
+import com.moonstub.basicengine.gameScreens.MainMenuScreen;
 import com.moonstub.basicengine.input.TouchEvent;
 
 import java.util.ArrayList;
@@ -20,7 +22,8 @@ import java.util.List;
 public class Game extends GameActivity {
 
     protected GameScreen initializeScreen() {
-        return new TestScreen(this);
+        //return new TestScreen(this);
+        return new MainGameScreen(this);
     }
 
     private class TestScreen extends GameScreen {
@@ -46,6 +49,10 @@ public class Game extends GameActivity {
         @Override
         public void init() {
             GameAssets.TestAsset = getGameGraphics().newImage("testBob.png");
+
+            GameAssets.Bob_Open = getGameGraphics().newImage("a10.png");
+            GameAssets.Bob_Close = getGameGraphics().newImage("a11.png");
+
             testBaseEntity = new BaseEntity(500,500,50);
 
             //testEnemy = new Enemy(getGameActivity(), 50,50,50);
@@ -59,6 +66,8 @@ public class Game extends GameActivity {
                 for(int indexX = 0; indexX < 10; indexX++)
                 {
                     mEnemyArrayList.add(new Enemy(getGameActivity(),(55 * indexX), (55 * indexY),50));
+                    mEnemyArrayList.get(mEnemyArrayList.size()-1).setSprite(
+                            new GameImage[]{GameAssets.Bob_Open,GameAssets.Bob_Close});
                     int value = indexY * 10 + indexX;
                     if(value % 2 == 0){
                         mEnemyArrayList.get(value).setIsAlive(false);
@@ -95,12 +104,12 @@ public class Game extends GameActivity {
 
             if(testButton.isTouched()) {
                 testButton2.setIsTouched(false);
-                playerOne.move(-10);
+                playerOne.move(-50);
 
             }
             if(testButton2.isTouched()){
                 testButton.setIsTouched(false);
-                playerOne.move(10);
+                playerOne.move(50);
             }
             playerOne.update(mEnemyArrayList);
             //testEnemy.update();
@@ -111,7 +120,7 @@ public class Game extends GameActivity {
                 }
             }
             for(int index = 0; index < mEnemyArrayList.size(); index++){
-                mEnemyArrayList.get(index).update();
+                mEnemyArrayList.get(index).update(delta);
             }
 
         }

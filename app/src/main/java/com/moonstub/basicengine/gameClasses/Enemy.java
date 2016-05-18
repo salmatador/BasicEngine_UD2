@@ -2,9 +2,9 @@ package com.moonstub.basicengine.gameClasses;
 
 import android.graphics.Color;
 import android.graphics.Rect;
-import android.util.Log;
 
 import com.moonstub.basicengine.GameAssets;
+import com.moonstub.basicengine.classes.SimpleAnimate;
 import com.moonstub.basicengine.framework.GameActivity;
 import com.moonstub.basicengine.framework.GameGraphics;
 import com.moonstub.basicengine.framework.GameImage;
@@ -22,6 +22,7 @@ public class Enemy {
     GameActivity game;
     Bullet mBullet;
     GameImage mGameImage;
+    SimpleAnimate mAnimate;
     //private boolean mDrop;
 
     public Enemy(GameActivity game, int x, int y, int size){
@@ -32,7 +33,12 @@ public class Enemy {
         setDirection(true);
         setIsAlive(true);
         mBullet = new Bullet();
-        mGameImage = GameAssets.TestAsset;
+        //mGameImage = GameAssets.TestAsset;
+    }
+
+    public void setSprite(GameImage[] sprites){
+        mAnimate = new SimpleAnimate(sprites);
+        mGameImage = mAnimate.getCurrentImage();
     }
 
     public void fire(){
@@ -46,7 +52,7 @@ public class Enemy {
         if(isAlive()){
             if(mGameImage != null){
                 //graphics.drawImage(mGameImage,x,y);
-                graphics.drawScaledImage(mGameImage,x,y,50,50);
+                graphics.drawScaledImage(mAnimate.getCurrentImage(),x,y,100,100);
             } else {
                 graphics.drawFillRect(new Rect(x, y, x + size, y + size), Color.CYAN);
             }
@@ -56,7 +62,8 @@ public class Enemy {
         }
     }
 
-    public void update(){
+    public void update(float delta){
+        mAnimate.update(delta);
         move();
         fire();
         if(mBullet.isAlive()){
