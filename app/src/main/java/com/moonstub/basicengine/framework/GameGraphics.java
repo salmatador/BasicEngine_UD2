@@ -26,12 +26,15 @@ public class GameGraphics {
     Rect mSourceRect = new Rect();
     Rect mDestinationRect = new Rect();
 
+    //sets initial variables for GameGraphics
     public GameGraphics(AssetManager assetManager, Bitmap frameBuffer) {
         mAssetManager = assetManager;
         mFrameBuffer = frameBuffer;
         mCanvas = new Canvas(frameBuffer);
         mPaint = new Paint();
     }
+
+    //creates a new image variable for sprites
     public GameImage newSpriteImage(GameImage gameImage, int x, int y, int frameSize, int frameSizeY){
 
         Bitmap bitmap = null;
@@ -40,6 +43,8 @@ public class GameGraphics {
 
         return new GameImage(bitmap, ImageFormat.ARGB8888);
     }
+
+    //call for an image variable that checks for errors
     public GameImage newImage(String fileName) {
         ImageFormat format = ImageFormat.ARGB8888;
         //Bitmap.Config config = Bitmap.Config.ARGB_8888;
@@ -91,6 +96,7 @@ public class GameGraphics {
         mCanvas.drawLine(x, y, x2, y2, mPaint);
     }
 
+    //helper method to draw rectangles
     public void drawRect(int x, int y, int width, int height, int color) {
         mPaint.setColor(color);
         mPaint.setStyle(Paint.Style.FILL);
@@ -98,6 +104,7 @@ public class GameGraphics {
 
     }
 
+    //helper method to draw rectangles
     public void drawRect(Rect rect, int color){
         mPaint.setColor(color);
         mPaint.setStyle(Paint.Style.STROKE);
@@ -105,12 +112,14 @@ public class GameGraphics {
         mCanvas.drawRect(rect, mPaint);
     }
 
+    //helper method to draw filled rectangles
     public void drawFillRect(Rect rect, int color){
         mPaint.setColor(color);
         mPaint.setStyle(Paint.Style.FILL);
         mCanvas.drawRect(rect, mPaint);
     }
 
+    //helper method to draw images
     public void drawImage(GameImage image, int x, int y,
                           int srcX, int srcY, int srcWidth, int srcHeight) {
 
@@ -128,22 +137,26 @@ public class GameGraphics {
 
     }
 
+    //helper method to draw strings
     public void drawString(String text, int x, int y){
         mPaint.setTextSize(25.0f);
         mPaint.setColor(Color.WHITE);
         mCanvas.drawText(text,x,y,mPaint);
     }
+    //helper method to draw strings
     public void drawString(String text, int x, int y, float size, int color) {
         mPaint.setTextSize(size);
         mPaint.setColor(color);
         mCanvas.drawText(text, x, y, mPaint);
     }
 
+    //helper method to draw images
     public void drawImage(GameImage image, int x, int y){
         mCanvas.drawBitmap(image.mBitmap, x, y, null);
 
     }
 
+    //helper method to draw scaled images
     public void drawScaledImage(GameImage image, int x, int y, int width, int height){
         mDestinationRect.left = x;
         mDestinationRect.top = y;

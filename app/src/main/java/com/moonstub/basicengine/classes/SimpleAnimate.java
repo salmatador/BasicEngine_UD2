@@ -10,7 +10,7 @@ import com.moonstub.basicengine.framework.GameImage;
  */
 public class SimpleAnimate {
 
-
+    //
     int frameCount;
     int currentFrame;
     float timeAccumulation = 0.0f;
@@ -25,6 +25,7 @@ public class SimpleAnimate {
 
     public SimpleAnimate(){}
 
+    //keeps track of delta time to slow down the animation speed
     public void update(float delta){
         timeAccumulation = timeAccumulation + delta;
 
@@ -38,6 +39,7 @@ public class SimpleAnimate {
         }
     }
 
+    //draws the game graphic at a specific scale
     public void draw(GameGraphics graphics){
         //graphics.drawImage(imageAssets[currentFrame],100,100);
         graphics.drawScaledImage(imageAssets[currentFrame],100,100,200,200);

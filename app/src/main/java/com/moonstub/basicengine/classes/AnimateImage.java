@@ -32,6 +32,7 @@ public class AnimateImage {
             return mImages[index];
     }
 
+    //Loads Game images into an array for animation
     public boolean LoadImageArrayVertical(){
         boolean isDone = false;
         int x = 0;

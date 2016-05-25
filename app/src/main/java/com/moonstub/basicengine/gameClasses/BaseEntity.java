@@ -13,6 +13,7 @@ public class BaseEntity {
     int x,y,size,width,height,life;
     boolean isAlive;
 
+    //sets parameters for the base
     public BaseEntity(int x, int y, int size){
         setX(x);
         setY(y);
@@ -21,10 +22,12 @@ public class BaseEntity {
         life = 3;
     }
 
+    //draws rectangles for the bases
     public void draw(GameGraphics graphics){
         graphics.drawFillRect(getBounds(), Color.GREEN);
     }
 
+    //getters and setters
     public Rect getBounds(){
         return new Rect(x,y,x+width,y+height);
     }

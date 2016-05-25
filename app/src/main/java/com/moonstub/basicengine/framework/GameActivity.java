@@ -128,6 +128,7 @@ public abstract class GameActivity extends AppCompatActivity {
 
     }
 
+    //tells the program what to do when resumed
     @Override
     protected void onResume() {
         super.onResume();
@@ -135,6 +136,7 @@ public abstract class GameActivity extends AppCompatActivity {
         mRenderView.resume();
     }
 
+    //tells the program what to do when the program is paused
     @Override
     protected void onPause() {
         super.onPause();
@@ -147,6 +149,7 @@ public abstract class GameActivity extends AppCompatActivity {
 
     }
 
+    //tells the program what to do when back button is pressed
     @Override
     public void onBackPressed() {
         if(getCurrentScreen().onBackPressed()) {

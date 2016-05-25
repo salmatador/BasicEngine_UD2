@@ -14,6 +14,7 @@ public class GameImage {
         mImageFormat = format;
     }
 
+    //gets dimensions for game images
     public int getWidth(){return mBitmap.getWidth();}
     public int getHeight(){return mBitmap.getHeight();}
     public ImageFormat getFormat(){return mImageFormat;}
