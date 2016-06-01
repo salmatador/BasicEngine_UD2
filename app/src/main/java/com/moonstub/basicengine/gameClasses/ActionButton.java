@@ -13,6 +13,7 @@ public class ActionButton {
     int x,y,size;
     boolean isTouched;
 
+    //creates a button
     public ActionButton(int x, int y, int size){
         setX(x);
         setY(y);
@@ -20,10 +21,12 @@ public class ActionButton {
         setIsTouched(false);
     }
 
+    //calls a filled rectangle
     public void draw(GameGraphics graphics){
         graphics.drawFillRect(new Rect(x,y,x+size,y+size),((isTouched) ? Color.GREEN : Color.GRAY));
     }
 
+    //getters and setters
     public Rect getBounds(){
         return new Rect(x,y,x+size,y+size);
     }
@@ -52,10 +55,12 @@ public class ActionButton {
         this.size = size;
     }
 
+    //checks to see if button is touched
     public boolean isTouched() {
         return isTouched;
     }
 
+    //lets the program know the button is touched
     public void setIsTouched(boolean isTouched) {
         this.isTouched = isTouched;
     }

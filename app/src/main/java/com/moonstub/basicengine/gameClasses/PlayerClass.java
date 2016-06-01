@@ -25,6 +25,7 @@ public class PlayerClass {
     int maxBullets = 5;
     int currentBullet = 0;
 
+    //sets initial parameters for player class
     public PlayerClass(GameActivity game, int x, int y){
         this.game = game;
         this.x = x;
@@ -41,6 +42,7 @@ public class PlayerClass {
         }
     }
 
+    //updates enemy array list checking if the enemy has been hit by a player bullet and kills if hit
     public void update(ArrayList<Enemy> enemy){
         for (int i = 0; i < mBullets.length; i++) {
             if(mBullets[i].isAlive()) {
@@ -51,6 +53,7 @@ public class PlayerClass {
 
     }
 
+    //allows the player to move from side to side
     public void move(int step){
         x = x + step;
         if( x  < 0){
@@ -61,6 +64,7 @@ public class PlayerClass {
         }
     }
 
+    //allows the player to fire only allowing a number of bullets on screen at one time
     public void fire(){
         int index = currentBullet;
         if(!mBullets[index].isAlive()) {
@@ -69,6 +73,7 @@ public class PlayerClass {
             currentBullet = ((currentBullet + 1) % mBullets.length);
     }
 
+    //draws the bullet image if a bullet is currently available
     public void draw(GameGraphics graphics){
         graphics.drawFillRect(new Rect(x,y,x + width,y + height), mColor);
         for (Bullet bullet : mBullets) {
@@ -78,6 +83,7 @@ public class PlayerClass {
         }
     }
 
+    //sets the player color
     public void setColor(int color){
         mColor = color;
     }

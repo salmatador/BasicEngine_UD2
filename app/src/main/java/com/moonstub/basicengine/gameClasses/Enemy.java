@@ -36,11 +36,13 @@ public class Enemy {
         //mGameImage = GameAssets.TestAsset;
     }
 
+    //sets sprite images for the enemy class
     public void setSprite(GameImage[] sprites){
         mAnimate = new SimpleAnimate(sprites);
         mGameImage = mAnimate.getCurrentImage();
     }
 
+    //causes the enemy to fire at random intervals
     public void fire(){
         Random rnd = new Random();
         int value = rnd.nextInt(10000);
@@ -48,6 +50,8 @@ public class Enemy {
             mBullet = new Bullet(getX() + getBounds().width() / 2,getY(),false);
         }
     }
+
+    //draws and animates the enemy class
     public void draw(GameGraphics graphics){
         if(isAlive()){
             if(mGameImage != null){
@@ -62,6 +66,7 @@ public class Enemy {
         }
     }
 
+    //updates the enemy class
     public void update(float delta){
         mAnimate.update(delta);
         move();
@@ -78,6 +83,7 @@ public class Enemy {
         }
     }
 
+    //make the enemy class to check for walls to keep them moving down and not going off screen
     public boolean wallCheck() {
         if(isAlive()) {
             if (direction) {
@@ -93,6 +99,8 @@ public class Enemy {
         }
         return false;
     }
+
+    //moves the enemy side to side and down towards the player
     private boolean move() {
         if(drop){
          y = y + 25;
@@ -107,6 +115,7 @@ public class Enemy {
         return false;
     }
 
+    //getters and setters
     public int getX() {
         return x;
     }

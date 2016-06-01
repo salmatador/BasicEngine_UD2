@@ -47,23 +47,30 @@ public class MainGameScreen extends GameScreen {
     @Override
     public void init() {
 
+
+        //calls and sets the enemy sprite image
         GameAssets.Bob_Open = getGameGraphics().newImage("a10.png");
         GameAssets.Bob_Close = getGameGraphics().newImage("a11.png");
         bob = new GameImage[]{GameAssets.Bob_Open,GameAssets.Bob_Close};
         bobAnimate = new SimpleAnimate(new GameImage[]{GameAssets.Bob_Open,GameAssets.Bob_Close});
 
+        //sets the game state to starting
         mGameState = GameState.STARTING;
 
+        //creates the player on the game screen
         playerOne = new PlayerClass(getGameActivity(),500, 1200);
 
+        //draws the three bases on the game screen
         protectiveBase = new ArrayList<>();
         protectiveBase.add(new ProtectiveBase(200,1300,50));
         protectiveBase.add(new ProtectiveBase(500,1300,50));
         protectiveBase.add(new ProtectiveBase(800,1300,50));
 
+        //sets the player class and its color
         playerOne = new PlayerClass(getGameActivity(),200,1600);
         playerOne.setColor(Color.BLUE);
 
+        //calls the enemy array list and draws it onto the game screen
         mEnemyArrayList = new ArrayList<>();
         for (int indexY = 0; indexY < 5; indexY++) {
             for(int indexX = 0; indexX < 10; indexX++)
@@ -118,6 +125,7 @@ public class MainGameScreen extends GameScreen {
         }
     }
 
+    //updates the running game so the enemy class is animated correctly and the player moves
     private void gameRunningUpdate(float delta) {
         bobAnimate.update(delta);
 
@@ -186,13 +194,16 @@ public class MainGameScreen extends GameScreen {
         bobAnimate.draw(getGameGraphics());
     }
 
+    //displays game over message on game over
     private void drawGameOver() {
         getGameGraphics().drawString("Game Over Man!!!",300,900,75.0f, Color.RED);
     }
 
+    //displays message when game is paused
     private void drawPaused() {
         getGameGraphics().drawString("Game is Paused",300,900,75.0f, Color.RED);
     }
+
 
     private void defaultDraw(float delta) {
         getGameGraphics().clearScreen(Colors.BLACK);
@@ -224,6 +235,7 @@ public class MainGameScreen extends GameScreen {
 
     }
 
+    //pauses game when back button is pressed
     @Override
     public boolean onBackPressed() {
         if(mGameState != GameState.PAUSED){

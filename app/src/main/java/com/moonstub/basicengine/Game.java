@@ -26,6 +26,7 @@ public class Game extends GameActivity {
         return new MainGameScreen(this);
     }
 
+    //creates a test screen
     private class TestScreen extends GameScreen {
 
         int x = 0;
@@ -40,6 +41,7 @@ public class Game extends GameActivity {
         ActionButton testButton;
         ActionButton testButton2;
 
+        //creates a test base
         BaseEntity testBaseEntity;
 
         public TestScreen(Game game) {
@@ -48,8 +50,10 @@ public class Game extends GameActivity {
 
         @Override
         public void init() {
+            //test image for sprite
             GameAssets.TestAsset = getGameGraphics().newImage("testBob.png");
 
+            //test images for sprite animation
             GameAssets.Bob_Open = getGameGraphics().newImage("a10.png");
             GameAssets.Bob_Close = getGameGraphics().newImage("a11.png");
 
@@ -78,6 +82,7 @@ public class Game extends GameActivity {
         }
 
         @Override
+        //test for updating the player movement, firing, and enemy movement.
         public void update(float delta) {
             List<TouchEvent.TouchEvents> event = getGameActivity().getGameInput().getTouchEvents();
 
@@ -130,6 +135,7 @@ public class Game extends GameActivity {
 
             getGameGraphics().clearScreen((currentColor) ? Colors.BLACK : Colors.BLACK);
 
+            //draws test buttons
             testButton.draw(getGameGraphics());
             testButton2.draw(getGameGraphics());
 

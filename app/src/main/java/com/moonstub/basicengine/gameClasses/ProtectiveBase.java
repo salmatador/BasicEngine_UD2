@@ -28,6 +28,7 @@ public class ProtectiveBase {
         buildBase();
     }
 
+    //draws the base the player moves under
     public void buildBase(){
 
         for(int indexY = 0; indexY < 3; indexY++){

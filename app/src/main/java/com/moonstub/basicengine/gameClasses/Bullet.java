@@ -20,6 +20,7 @@ public class Bullet {
         setX(-1000);
         setIsAlive(false);
     }
+    //sets parameters for the bullets
     public Bullet(int x, int y, boolean direction){
         setX(x);
         setY(y);
@@ -27,10 +28,12 @@ public class Bullet {
         this.direction = direction;
     }
 
+    //draws rectangles for bullets
     public void draw(GameGraphics graphics){
         graphics.drawFillRect(new Rect(x, y, x + 10, y + 15), Color.BLUE);
     }
 
+    //checks to see if the bullet hit an enemy
     public void checkCollision(ArrayList<Enemy> enemy){
         for (Enemy e : enemy) {
             if(e.isAlive() && e.getBounds().contains(getX(),getY())){
@@ -42,6 +45,7 @@ public class Bullet {
         }
     }
 
+    //moves the bullet when fired in one direction
     public void move(){
         setY(getY() + ((direction) ? -10 : 10));
         if(getY() <= 0 || getY() > 1500){
@@ -49,6 +53,7 @@ public class Bullet {
         }
     }
 
+    //getters and setters
     public int getX() {
         return x;
     }
